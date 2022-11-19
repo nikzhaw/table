@@ -8,6 +8,8 @@ public class Main {
         table.addRow("B", "2","C");
         table.addRow("B", "1" ,"C");
 
+
+
         table.printTable();
 
  //       table.clearFilter();
@@ -26,7 +28,20 @@ public class Main {
 
         table.printFilteredTable();
 
-        table.clearFilter();
+        System.out.println(table.filters);
+
+
+        table.removeFilter(2);
+
+        System.out.println("    ");
+        System.out.println(table.filters);
+        System.out.println("    ");
+
+
+        table.printFilteredTable();
+
+
+        table.clearAllFilters();
 
 
         System.out.println("    ");
