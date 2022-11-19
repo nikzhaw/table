@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -15,7 +16,7 @@ public class Table {
     private ArrayList<String[]> rows;
     private String[] title;
     private ArrayList<String[]> filterdRows;
-    public ArrayList<String> filters = new ArrayList<>();
+    private ArrayList<String> filters = new ArrayList<>();
   //  String[] filters;
 
 
@@ -142,6 +143,7 @@ public class Table {
     }
 
     public void printFilteredTable() {
+
         for (String[] row : filterdRows) {
             String start = "| ";
             for (String value : row) {
@@ -161,6 +163,23 @@ public class Table {
             }
 
         }
+
+    ArrayList<String> getColumn(String columnTitle) {
+        if (title != null & Arrays.asList(title).contains(columnTitle)){
+            return getColumn(Arrays.asList(title).indexOf(columnTitle));
+    }
+       else {
+           return null;
+        }
+    }
+        ArrayList<String> getColumn(int column){
+            ArrayList<String> col = new ArrayList<>();
+            for (String[] filterdRow : filterdRows) {
+                col.add(filterdRow[column]);
+            }
+            return col;
+        }
+
 
 
     }

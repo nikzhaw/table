@@ -28,13 +28,13 @@ public class Main {
 
         table.printFilteredTable();
 
-        System.out.println(table.filters);
+    //    System.out.println(table.filters);
 
 
         table.removeFilter(2);
 
         System.out.println("    ");
-        System.out.println(table.filters);
+     //   System.out.println(table.filters);
         System.out.println("    ");
 
 
