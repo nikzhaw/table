@@ -7,7 +7,11 @@ public class Main {
         table.addRow("A", "1" ,"D");
         table.addRow("B", "2","C");
         table.addRow("B", "1" ,"C");
-
+        try {
+            table.addRow("B", "1" ,"C" , "f");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
         table.printTable();

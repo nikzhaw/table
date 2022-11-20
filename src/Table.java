@@ -57,29 +57,36 @@ public class Table {
 
 
 
+    /**
+     * addTitle
+     * @param  titles Strings vor the titles of the columns (the number of Strings has to match the number of columns)
+     * @throws RuntimeException if number of arguments doesn't match Columns
+     */
 
 
-
-    public boolean addTitle(String ... args){
-        if (args.length!=COLUMNS){
-            return false;
+    public void addTitle(String ... titles) {
+        if (titles.length!=COLUMNS){
+            throw new RuntimeException("Wrong number of arguments. The table has " +  COLUMNS + " columns.");
         } else {
-            title = args;
-            return true;
+            title = titles;
         }
     }
 
 
+    /**
+     * addTitle
+     * @param  args Strings vor the titles of the columns (the number of Strings has to match the number of columns)
+     * @throws RuntimeException if number of titles doesn't match Columns
+     */
 
 
 
-    public boolean addRow(String ... args){
+    public void addRow(String ... args){
         if (args.length!=COLUMNS){
-            return false;
+            throw new RuntimeException("Wrong number of arguments. The table has " +  COLUMNS + " columns.");
         } else {
             rows.add(args);
             filterdRows.clear();
-            return true;
         }
     }
 
