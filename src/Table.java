@@ -106,14 +106,20 @@ public class Table {
             filterdRows  = rows;
         }
 
+        if (filters.get(column) < 1) {
 
-        List<String[]> filterList = filterdRows.stream().filter(row -> row[column].equals(filter)).toList();
-        ArrayList<String[]> newList = new ArrayList<>(filterList);
-        filterdRows = newList;
-        System.out.println(filters);
 
-        filters.get(column).add(filter);
-        return newList;
+            List<String[]> filterList = filterdRows.stream().filter(row -> row[column].equals(filter)).toList();
+            ArrayList<String[]> newList = new ArrayList<>(filterList);
+            filterdRows = newList;
+            System.out.println(filters);
+
+            filters.get(column).add(filter);
+            return newList;
+
+        } else {
+
+        }
     }
 
 
@@ -152,6 +158,7 @@ public class Table {
             ArrayList<String> col = filters.get(i);
             System.out.println("set filters for col: " + i + " = " + col);
             if (col != null){
+                System.out.println(col.size());
                 for (String fil : col) {
                     System.out.println(fil);
                     addFilter(column , fil);
@@ -285,6 +292,48 @@ public class Table {
 
         }
 
+
+    public void printFilters() {
+        String line1 = "";
+        String line2 = "";
+        String line3 = "";
+        for (ArrayList<String> filter : filters) {
+
+            String value = null;
+            try {
+                value = filter.get(0);
+            } catch (Exception e) {
+                value = "-";
+            }
+
+            line1 = line1 + " | " + value;
+
+             value = null;
+            try {
+                value = filter.get(1);
+            } catch (Exception e) {
+                value = "-";
+            }
+
+            line2 = line2 + " | " + value;
+
+             value = null;
+            try {
+                value = filter.get(2);
+            } catch (Exception e) {
+                value = "-";
+            }
+
+            line3 = line3 + " | " + value;
+            
+        }
+        System.out.println("XXXX");
+        System.out.println(line1);
+        System.out.println(line2);
+        System.out.println(line3);
+        System.out.println("XXXX");
+    }
+        
 
 
 

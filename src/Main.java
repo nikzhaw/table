@@ -7,6 +7,9 @@ public class Main {
         table.addRow("A", "1" ,"D");
         table.addRow("B", "2","C");
         table.addRow("B", "1" ,"C");
+        table.addRow("C", "1" ,"A");
+        table.addRow("C", "2","A");
+        table.addRow("C", "1" ,"A");
         try {
             table.addRow("B", "1" ,"C" , "f");
         } catch (Exception e) {
@@ -16,6 +19,8 @@ public class Main {
 
         table.printTable();
 
+        table.printFilters();
+        System.out.println("    ");
  //       table.clearFilter();
 
         table.addFilter(1,"1");
@@ -24,13 +29,26 @@ public class Main {
         System.out.println("    ");
 
         table.printFilteredTable();
+        table.printFilters();
+        System.out.println("    ");
 
         table.addFilter(2,"D");
+        table.addFilter(2,"A");
 
-        System.out.println("    ");
+
+        table.printFilters();
         System.out.println("    ");
 
+        System.out.println("hallo");
         table.printFilteredTable();
+        System.out.println("hallo");
+        table.printFilteredTable();
+
+
+        System.out.println("    ");
+        System.out.println("    ");
+
+
 
     //    System.out.println(table.filters);
 
