@@ -98,29 +98,36 @@ public class Table {
      * @throws RuntimeException if column is bigger than number of columns
      */
 
-    public ArrayList<String[]> addFilter(int column , String filter){
-        if (column > COLUMNS){
-            throw new RuntimeException("Wrong number of column. The table has only " +  COLUMNS + " columns.");
+    public ArrayList<String[]> addFilter(int column , String filter) {
+        if (column > COLUMNS) {
+            throw new RuntimeException("Wrong number of column. The table has only " + COLUMNS + " columns.");
         }
-        if (filterdRows.isEmpty()){
-            filterdRows  = rows;
+        if (filterdRows.isEmpty()) {
+            filterdRows = rows;
         }
 
-        if (filters.get(column) < 1) {
 
+        ArrayList<String> colFilters = filters.get(column);
 
-            List<String[]> filterList = filterdRows.stream().filter(row -> row[column].equals(filter)).toList();
-            ArrayList<String[]> newList = new ArrayList<>(filterList);
-            filterdRows = newList;
-            System.out.println(filters);
-
-            filters.get(column).add(filter);
-            return newList;
-
-        } else {
-
+        if (colFilters.size() > 0) {
+            columFilterBackup
+            // remove filters first
         }
+
+
+        colFilters.add(filter);
+
+        ArrayList<String[]> newList = new ArrayList<>();
+        for (String colFilter : colFilters) {
+            List<String[]> filterList = filterdRows.stream().filter(row -> row[column].equals(colFilter)).toList();
+            newList.addAll(filterList);
+        }
+
+        return newList;
     }
+
+
+
 
 
     private void clearFilter(){
