@@ -16,7 +16,7 @@ public class Table {
     private ArrayList<String[]> rows;
     private String[] title;
     private ArrayList<String[]> filterdRows;
-    private ArrayList<String> filters = new ArrayList<>();
+    private ArrayList<ArrayList<String>> filters = new ArrayList<>();
 
 
     /**
@@ -29,7 +29,7 @@ public class Table {
         filterdRows = new ArrayList<>();
 
         for (int i = 0; i < COLUMNS; i++){
-            filters.add(null);
+            filters.add(new ArrayList<>());
         }
     }
 
@@ -44,7 +44,7 @@ public class Table {
         filterdRows = new ArrayList<>();
 
         for (int i = 0; i < COLUMNS; i++){
-            filters.add(null);
+            filters.add(new ArrayList<>());
         }
         if (title.length!=COLUMNS){
             System.out.println("Title length does not match to the number of columns");
@@ -111,7 +111,8 @@ public class Table {
         ArrayList<String[]> newList = new ArrayList<>(filterList);
         filterdRows = newList;
         System.out.println(filters);
-        filters.set(column, filter);
+
+        filters.get(column).add(filter);
         return newList;
     }
 
@@ -130,7 +131,7 @@ public class Table {
     void clearAllFilters(){
         filterdRows = rows;
         for (int i = 0; i > COLUMNS; i++){
-            filters.add(null);
+            filters.get(i).clear();
         }
     }
 
@@ -145,11 +146,16 @@ public class Table {
         if (column > COLUMNS){
             throw new RuntimeException("Wrong number of column. The table has only " +  COLUMNS + " columns.");
         }
-        filters.set(column, null);
+        filters.get(column).clear();
         clearFilter();
         for (int i = 0; i < filters.size(); i++){
-            if (filters.get(i) != null){
-                addFilter(i, filters.get(i));
+            ArrayList<String> col = filters.get(i);
+            System.out.println("set filters for col: " + i + " = " + col);
+            if (col != null){
+                for (String fil : col) {
+                    System.out.println(fil);
+                    addFilter(column , fil);
+                }
             }
         }
 
