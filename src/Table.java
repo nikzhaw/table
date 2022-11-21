@@ -7,7 +7,7 @@ import java.util.List;
  * Invisible table of Strings which can be filtered by columns
  *
  * @author Niklaus Haenggi
- * @version 0.1
+ * @version 0.2
  */
 public class Table {
 
@@ -180,12 +180,16 @@ public class Table {
      * @return ArrayList of the filtered column
      */
 
-    ArrayList<String> getColumn(int column){
-        ArrayList<String> col = new ArrayList<>();
-        for (String[] filterdRow : filterdRows) {
-            col.add(filterdRow[column]);
+    ArrayList<String> getColumn(int column) {
+        if (column > COLUMNS) {
+            throw new RuntimeException("Wrong number of column. The table has only " + COLUMNS + " columns.");
+        } else {
+            ArrayList<String> col = new ArrayList<>();
+            for (String[] filterdRow : filterdRows) {
+                col.add(filterdRow[column]);
+            }
+            return col;
         }
-        return col;
     }
 
 
@@ -197,13 +201,57 @@ public class Table {
      * @return ArrayList of the filtered column
      */
     ArrayList<String> getColumn(String columnTitle) {
-        if (title != null & Arrays.asList(title).contains(columnTitle)){
-            return getColumn(Arrays.asList(title).indexOf(columnTitle));
-        }
-        else {
-            return null;
+        if (!Arrays.asList(title).contains(columnTitle)) {
+            throw new RuntimeException("There is no column with the name " + columnTitle + " in the table.");
+        } else {
+            if (title != null & Arrays.asList(title).contains(columnTitle)) {
+                return getColumn(Arrays.asList(title).indexOf(columnTitle));
+            } else {
+                return null;
+            }
         }
     }
+
+
+    /**
+     * getRowOrigin
+     *
+     * returns a specific row according the row number of the original table
+     * @param  number int for row number (can't be higher than the number of total rows)
+     * @throws RuntimeException if row is higher then the number of total rows
+     * @return Array of the requested row
+     */
+
+
+    String[] getRowOrigin(int number) {
+        if (number > rows.size()) {
+            throw new RuntimeException("Requested row is bigger than the number of rows in the table, the table has " + rows.size() + " rows.");
+        } else {
+            return rows.get(number);
+        }
+    }
+
+
+
+    /**
+     * getRowFiltered
+     *
+     * returns a specific row according the row number of the filtered table
+     * @param  number int for row number (can't be higher than the number of total rows)
+     * @throws RuntimeException if row is higher then the number of total rows
+     * @return Array of the requested row
+     */
+
+
+    String[] getRowFiltered(int number) {
+        if (number > filterdRows.size()) {
+            throw new RuntimeException("Requested row is bigger than the number of rows in the table, the table has " + filterdRows.size() + " rows.");
+        } else {
+            return filterdRows.get(number);
+        }
+    }
+
+
 
 
 
