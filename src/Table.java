@@ -26,11 +26,11 @@ public class Table {
         this.COLUMNS = COLUMNS;
         rows = new ArrayList<>();
         filterdRows = new ArrayList<String[]>();
-        filters = new HashMap<String, ArrayList<Integer>>[COLUMNS];
+        filters = new HashMap[COLUMNS];
 
 
         for (int i = 0; i < COLUMNS; i++){
-            filters[i] = new ArrayList<>();
+            filters[i] = new HashMap<>();
         }
     }
 
@@ -49,9 +49,9 @@ public class Table {
             this.COLUMNS = COLUMNS;
             rows = new ArrayList<>();
             filterdRows = new ArrayList<>();
-            filters = new ArrayList[COLUMNS];
+            filters = new HashMap[COLUMNS];
             for (int i = 0; i < COLUMNS; i++){
-                filters[i] = new ArrayList<>();
+                filters[i] = new HashMap<>();
             }
 
         }
@@ -130,7 +130,7 @@ public class Table {
      * @return
      */
 
-    public ArrayList<String[]> removeFilter(int column , String filter) {
+    public void removeFilter(int column , String filter) {
         if (column > COLUMNS) {
             throw new RuntimeException("Wrong number of column. The table has only " + COLUMNS + " columns.");
         }
@@ -146,23 +146,39 @@ public class Table {
 
         public  ArrayList<String[]> crateFilteredTable(){
             HashSet<Integer> allShown = new HashSet<>();
-            HashSet<Integer> showsRows = new HashSet<>();
+            System.out.println(Arrays.toString(filters));
             for (HashMap<String, ArrayList<Integer>> filter : filters) {
+                if (!filter.isEmpty()){
+                    System.out.println("test");
+                    System.out.println(Arrays.toString(filter.keySet().toArray()));
                 Collection<ArrayList<Integer>> columFilters = filter.values();
 
-                for (ArrayList<Integer> columFilter : columFilters) {
-                    HashSet<Integer> entries = new HashSet<Integer>(columFilter);
-                    showsRows.addAll(entries);
+                    HashSet<Integer> showsRows = new HashSet<>();
+                    for (ArrayList<Integer> columFilter : columFilters) {
+                        HashSet<Integer> entries = new HashSet<Integer>(columFilter);
+
+                        showsRows.addAll(entries);
+                        System.out.println(Arrays.toString(showsRows.toArray()));
+                    }
+                    allShown.addAll(showsRows);
+                    allShown.retainAll(showsRows);
+                    System.out.println(Arrays.toString(allShown.toArray()));
                 }
+
+
             }
-            allShown.retainAll(showsRows);
+
+            System.out.println(filters);
+
 
             ArrayList<String[]> filtered = new ArrayList<>();
             for (int i = 0; i < rows.size(); i++) {
                 if (allShown.contains(i)) {
                     filtered.add(rows.get(i));
+
                 }
-            }
+                }
+
             filterdRows = filtered;
            return filtered;
 
@@ -182,7 +198,7 @@ public class Table {
             if (!Arrays.asList(title).contains(column)) {
                 throw new RuntimeException("There is no column with the name " + column + " in the table.");
             } else {
-                removeFilter(Arrays.asList(title).indexOf(column));
+                removeFilter(column);
             }
 
         }
@@ -225,6 +241,22 @@ public class Table {
             } else {
                 return null;
             }
+        }
+    }
+
+
+
+
+
+    /**
+     * clearAllFilters
+     * removes all set filters at once
+     */
+
+    void clearAllFilters(){
+        filterdRows = rows;
+        for (int i = 0; i > COLUMNS; i++){
+            filters[i].clear();
         }
     }
 

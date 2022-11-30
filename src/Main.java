@@ -21,26 +21,33 @@ public class Main {
         table.addFilter(1,"1");
 
         System.out.println("    ");
+        System.out.println("  XXXXX  ");
         System.out.println("    ");
 
+        table.crateFilteredTable();
         table.printFilteredTable();
 
         table.addFilter(2,"D");
 
         System.out.println("    ");
+        System.out.println("  XXXXX  ");
         System.out.println("    ");
 
+        table.crateFilteredTable();
         table.printFilteredTable();
 
     //    System.out.println(table.filters);
 
 
-        table.removeFilter(2);
+      //  table.removeFilter(2 , "D");
 
         System.out.println("    ");
      //   System.out.println(table.filters);
         System.out.println("    ");
 
+
+        table.removeFilter(2,"D");
+        table.crateFilteredTable();
 
         table.printFilteredTable();
 
