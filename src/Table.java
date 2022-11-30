@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -15,8 +13,9 @@ public class Table {
 
     private ArrayList<String[]> rows;
     private String[] title;
+ //   private ArrayList<Integer>[] filterdRows;
+    private HashMap<String, ArrayList<Integer>>[] filters;
     private ArrayList<String[]> filterdRows;
-    private ArrayList<String> filters = new ArrayList<>();
 
 
     /**
@@ -26,12 +25,16 @@ public class Table {
     public Table(int COLUMNS) {
         this.COLUMNS = COLUMNS;
         rows = new ArrayList<>();
-        filterdRows = new ArrayList<>();
+        filterdRows = new ArrayList<String[]>();
+        filters = new HashMap<String, ArrayList<Integer>>[COLUMNS];
+
 
         for (int i = 0; i < COLUMNS; i++){
-            filters.add(null);
+            filters[i] = new ArrayList<>();
         }
     }
+
+
 
     /**
      * Constructor
@@ -39,19 +42,20 @@ public class Table {
      * @param  title title of the columns as String array, this musst match to the number of columns
      */
     public Table(int COLUMNS, String[] title) {
-        this.COLUMNS = COLUMNS;
-        rows = new ArrayList<>();
-        filterdRows = new ArrayList<>();
-
-        for (int i = 0; i < COLUMNS; i++){
-            filters.add(null);
-        }
         if (title.length!=COLUMNS){
-            System.out.println("Title length does not match to the number of columns");
+            throw new RuntimeException("Title length does not match to the number of columns");
         } else {
             this.title = title;
+            this.COLUMNS = COLUMNS;
+            rows = new ArrayList<>();
+            filterdRows = new ArrayList<>();
+            filters = new ArrayList[COLUMNS];
+            for (int i = 0; i < COLUMNS; i++){
+                filters[i] = new ArrayList<>();
+            }
 
         }
+
     }
 
 
@@ -71,6 +75,8 @@ public class Table {
             title = titles;
         }
     }
+
+
 
 
     /**
@@ -98,78 +104,88 @@ public class Table {
      * @throws RuntimeException if column is bigger than number of columns
      */
 
-    public ArrayList<String[]> addFilter(int column , String filter){
+    public void addFilter(int column , String filter){
         if (column > COLUMNS){
             throw new RuntimeException("Wrong number of column. The table has only " +  COLUMNS + " columns.");
         }
-        if (filterdRows.isEmpty()){
-            filterdRows  = rows;
+        ArrayList<Integer> newFilter = new ArrayList<>();
+        for (int i =0 ; i < rows.size() ; i++) {
+
+            if (rows.get(i)[column].equals(filter)){
+                newFilter.add(i);
+            }
+
         }
 
+        filters[column].put(filter, newFilter);
 
-        List<String[]> filterList = filterdRows.stream().filter(row -> row[column].equals(filter)).toList();
-        ArrayList<String[]> newList = new ArrayList<>(filterList);
-        filterdRows = newList;
-        System.out.println(filters);
-        filters.set(column, filter);
-        return newList;
     }
 
-
-    private void clearFilter(){
-        filterdRows = rows;
-    }
-
-
-
-    /**
-     * clearAllFilters
-     * removes all set filters at once
-     */
-
-    void clearAllFilters(){
-        filterdRows = rows;
-        for (int i = 0; i > COLUMNS; i++){
-            filters.add(null);
-        }
-    }
 
     /**
      * remove filter
      * removes a filter wich was set before
      * @param  column int for column number from wich the filter should be removed (can't be higher than the number of columns)
      * @throws RuntimeException if column is bigger than number of columns
+     * @return
      */
 
-    public void removeFilter(int column){
-        if (column > COLUMNS){
-            throw new RuntimeException("Wrong number of column. The table has only " +  COLUMNS + " columns.");
+    public ArrayList<String[]> removeFilter(int column , String filter) {
+        if (column > COLUMNS) {
+            throw new RuntimeException("Wrong number of column. The table has only " + COLUMNS + " columns.");
         }
-        filters.set(column, null);
-        clearFilter();
-        for (int i = 0; i < filters.size(); i++){
-            if (filters.get(i) != null){
-                addFilter(i, filters.get(i));
-            }
-        }
-
-    }
-
-    /**
-     * remove filter
-     * removes a filter wich was set before
-     * @param  column Strings vor the titles of the columns (Strings has to match the title of columns)
-     * @throws RuntimeException if column in not available
-     */
-
-    public void removeFilter(String column){
-        if (!Arrays.asList(title).contains(column)){
-            throw new RuntimeException("There is no column with the name " + column + " in the table.");
+        if (!filters[column].keySet().contains(filter)) {
+            throw new RuntimeException("Filter is not set for column " + column);
         } else {
-            removeFilter(Arrays.asList(title).indexOf(column));
+            filters[column].remove(filter);
+
+
+        }
+    }
+
+
+        public  ArrayList<String[]> crateFilteredTable(){
+            HashSet<Integer> allShown = new HashSet<>();
+            HashSet<Integer> showsRows = new HashSet<>();
+            for (HashMap<String, ArrayList<Integer>> filter : filters) {
+                Collection<ArrayList<Integer>> columFilters = filter.values();
+
+                for (ArrayList<Integer> columFilter : columFilters) {
+                    HashSet<Integer> entries = new HashSet<Integer>(columFilter);
+                    showsRows.addAll(entries);
+                }
+            }
+            allShown.retainAll(showsRows);
+
+            ArrayList<String[]> filtered = new ArrayList<>();
+            for (int i = 0; i < rows.size(); i++) {
+                if (allShown.contains(i)) {
+                    filtered.add(rows.get(i));
+                }
+            }
+            filterdRows = filtered;
+           return filtered;
+
         }
 
-    }
+
+        /**
+         * remove filter
+         * removes a filter wich was set before
+         * @param  column Strings vor the titles of the columns (Strings has to match the title of columns)
+         * @throws RuntimeException if column in not available
+         */
+
+        public void removeFilter(String column){
+
+
+            if (!Arrays.asList(title).contains(column)) {
+                throw new RuntimeException("There is no column with the name " + column + " in the table.");
+            } else {
+                removeFilter(Arrays.asList(title).indexOf(column));
+            }
+
+        }
 
 
     /**
@@ -180,7 +196,7 @@ public class Table {
      * @return ArrayList of the filtered column
      */
 
-    ArrayList<String> getColumn(int column) {
+    public ArrayList<String> getColumn(int column) {
         if (column > COLUMNS) {
             throw new RuntimeException("Wrong number of column. The table has only " + COLUMNS + " columns.");
         } else {
@@ -211,6 +227,54 @@ public class Table {
             }
         }
     }
+
+
+
+
+
+    /**
+     * getColumnValues
+     * returns all values of a specific column of the table in the filtered condition
+     * the Values are returned only once even if there are duplicates in the column
+     * @param  column int for column number from which should be returned (can't be higher than the number of columns)
+     * @throws RuntimeException if column in not available
+     * @return ArrayList of the Values from filtered column
+     */
+
+    ArrayList<String> getColumnValues(int column) {
+        HashSet<String>  entries = new HashSet<String>(getColumn(column));
+        ArrayList values = new ArrayList<>(entries);
+        return values;
+    }
+
+
+
+    /**
+     * getColumnValues
+     * returns all values of a specific column of the table in the filtered condition
+     * the Values are returned only once even if there are duplicates in the column
+     * @param  columnTitle String for columnTitle from which should be returned (can't be higher than the number of columns)
+     * @throws RuntimeException if column in not available
+     * @return ArrayList of the Values from filtered column
+     */
+    ArrayList<String> getColumnEntries(String columnTitle) {
+        if (title != null & Arrays.asList(title).contains(columnTitle)) {
+            throw new RuntimeException("There is no column with the name " + columnTitle + " in the table.");
+        } else {
+
+                HashSet<String> entries = new HashSet<String>(getColumn(Arrays.asList(title).indexOf(columnTitle)));
+                ArrayList values = new ArrayList<>(entries);
+                return values;
+
+            }
+        }
+
+
+
+
+
+
+
 
 
     /**
@@ -250,7 +314,6 @@ public class Table {
             return filterdRows.get(number);
         }
     }
-
 
 
 
