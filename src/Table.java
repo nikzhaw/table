@@ -144,6 +144,12 @@ public class Table {
     }
 
 
+    /**
+     * crateFilteredTable
+     * updates the filtered Table according the set filters
+     * @return
+     */
+
         public  ArrayList<String[]> crateFilteredTable(){
             HashSet<Integer> allShown = new HashSet<>();
             System.out.println(Arrays.toString(filters));
@@ -160,9 +166,14 @@ public class Table {
                         showsRows.addAll(entries);
                         System.out.println(Arrays.toString(showsRows.toArray()));
                     }
-                    allShown.addAll(showsRows);
-                    allShown.retainAll(showsRows);
-                    System.out.println(Arrays.toString(allShown.toArray()));
+                    if (allShown.isEmpty()){
+                        allShown.addAll(showsRows);
+                    } else{
+                        allShown.retainAll(showsRows);
+                        System.out.println(Arrays.toString(allShown.toArray()));
+                    }
+
+
                 }
 
 
